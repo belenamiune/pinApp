@@ -1,27 +1,89 @@
-# PinApp
+# PinApp challenge - Gestión de Clientes
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
+Aplicación web desarrollada con Angular como parte del desafío técnico para PinApp.
 
-## Development server
+## Demo
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+[Aplicación](https://pinappchallengeb.web.app/auth)
 
-## Code scaffolding
+## Repositorio
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+[https://github.com/belenamiune/pinApp](https://github.com/belenamiune/pinApp)
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Tecnologías
 
-## Running unit tests
+- **Angular 15**
+- **Firebase Firestore** — almacenamiento de datos en tiempo real
+- **Firebase Authentication** — autenticación con email y contraseña
+- **Firebase Hosting** — deploy de la aplicación
+- **Angular Material** — componentes de UI
+- **AngularFire 7** — integración de Firebase con Angular
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
+## Funcionalidades
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Autenticación
+- Registro e inicio de sesión con email y contraseña (Firebase Auth)
+- Rutas protegidas con AuthGuard
 
-## Further help
+### Formulario de creación de cliente
+- Campos: nombre, apellido, edad y fecha de nacimiento
+- Validaciones avanzadas (campos requeridos, longitud, formato, solo letras)
+- Pipe personalizado `customDate` para formatear la fecha en formato DD/MM/YYYY
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Lista de clientes
+- Visualización en tiempo real desde Firestore
+- Búsqueda por nombre, apellido o edad
+- Ordenamiento por columna (ascendente/descendente)
+- Eliminación de clientes
+
+### Análisis de datos
+- Promedio de edad de todos los clientes registrados
+- Desviación estándar de las edades
+
+---
+
+## ¿Cómo correr el proyecto localmente?
+
+### Requisitos previos
+- Node.js 16+
+- Angular CLI 15
+- Cuenta de Firebase
+
+### Instalación
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/belenamiune/pinApp.git
+cd pinApp
+
+# Instalar dependencias
+npm install
+
+# Correr en modo desarrollo
+ng serve
+```
+
+Luego: [http://localhost:4200](http://localhost:4200) en el navegador.
+
+
+---
+
+## Deploy
+
+```bash
+# Build de producción
+ng build
+
+# Deploy a Firebase Hosting
+firebase deploy
+```
+
+---
+
+## Autor
+
+Desarrollado por **María Belén Amiune** para el desafío técnico de **PinApp**.

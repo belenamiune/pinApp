@@ -1,1 +1,105 @@
-<p>customer-list works!</p>
+<div class="list-container">
+
+  <!-- Header -->
+  <div class="list-header">
+    <h1>Clientes</h1>
+    <button mat-raised-button color="primary" (click)="goToForm()">
+      <mat-icon>add</mat-icon>
+      Nuevo cliente
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-container" *ngIf="customers.length > 0">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-label">Total clientes</span>
+        <span class="stat-value">{{ customers.length }}</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-label">Promedio de edad</span>
+        <span class="stat-value">{{ averageAge | number:'1.1-1' }}</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-label">Desviación estándar</span>
+        <span class="stat-value">{{ stdDeviation | number:'1.1-1' }}</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Filtro -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Buscar cliente</mat-label>
+    <input matInput
+           [(ngModel)]="searchTerm"
+           (ngModelChange)="applyFilters()"
+           placeholder="Nombre, apellido o edad">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    Cargando clientes...
+  </div>
+
+  <!-- Sin resultados -->
+  <div *ngIf="!isLoading && filteredCustomers.length === 0" class="empty-state">
+    <mat-icon>people_outline</mat-icon>
+    <p>No hay clientes registrados</p>
+    <button mat-stroked-button (click)="goToForm()">Registrar el primero</button>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-wrapper" *ngIf="!isLoading && filteredCustomers.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th (click)="sortBy('nombre')" class="sortable">
+            Nombre
+            <mat-icon *ngIf="sortField === 'nombre'">
+              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+            </mat-icon>
+          </th>
+          <th (click)="sortBy('apellido')" class="sortable">
+            Apellido
+            <mat-icon *ngIf="sortField === 'apellido'">
+              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+            </mat-icon>
+          </th>
+          <th (click)="sortBy('edad')" class="sortable">
+            Edad
+            <mat-icon *ngIf="sortField === 'edad'">
+              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+            </mat-icon>
+          </th>
+          <th (click)="sortBy('fechaNacimiento')" class="sortable">
+            Fecha de nacimiento
+            <mat-icon *ngIf="sortField === 'fechaNacimiento'">
+              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+            </mat-icon>
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of filteredCustomers">
+          <td>{{ customer.nombre }}</td>
+          <td>{{ customer.apellido }}</td>
+          <td>{{ customer.edad }}</td>
+          <td>{{ customer.fechaNacimiento | customDate }}</td>
+          <td>
+            <button mat-icon-button color="warn"
+                    (click)="deleteCustomer(customer.id!)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

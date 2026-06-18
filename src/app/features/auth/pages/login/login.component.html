@@ -1,1 +1,93 @@
-<p>login works!</p>
+<div class="login-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Gestión de Clientes</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-tab-group>
+
+        <!-- Tab Login -->
+        <mat-tab label="Iniciar sesión">
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" placeholder="tu@email.com">
+              <mat-error *ngIf="getLoginControl('email')?.hasError('required')">
+                El email es requerido
+              </mat-error>
+              <mat-error *ngIf="getLoginControl('email')?.hasError('email')">
+                Ingresá un email válido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <input matInput formControlName="password" type="password">
+              <mat-error *ngIf="getLoginControl('password')?.hasError('required')">
+                La contraseña es requerida
+              </mat-error>
+              <mat-error *ngIf="getLoginControl('password')?.hasError('minlength')">
+                Mínimo 6 caracteres
+              </mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary"
+                    type="submit"
+                    class="full-width"
+                    [disabled]="isLoading">
+              {{ isLoading ? 'Ingresando...' : 'Ingresar' }}
+            </button>
+
+          </form>
+        </mat-tab>
+
+        <!-- Tab Registro -->
+        <mat-tab label="Registrarse">
+          <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" placeholder="tu@email.com">
+              <mat-error *ngIf="getRegisterControl('email')?.hasError('required')">
+                El email es requerido
+              </mat-error>
+              <mat-error *ngIf="getRegisterControl('email')?.hasError('email')">
+                Ingresá un email válido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <input matInput formControlName="password" type="password">
+              <mat-error *ngIf="getRegisterControl('password')?.hasError('required')">
+                La contraseña es requerida
+              </mat-error>
+              <mat-error *ngIf="getRegisterControl('password')?.hasError('minlength')">
+                Mínimo 6 caracteres
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Confirmar contraseña</mat-label>
+              <input matInput formControlName="confirmPassword" type="password">
+              <mat-error *ngIf="registerForm.hasError('passwordMismatch')">
+                Las contraseñas no coinciden
+              </mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary"
+                    type="submit"
+                    class="full-width"
+                    [disabled]="isLoading">
+              {{ isLoading ? 'Registrando...' : 'Crear cuenta' }}
+            </button>
+
+          </form>
+        </mat-tab>
+
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>
