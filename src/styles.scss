@@ -1,4 +1,277 @@
-/* You can add global styles to this file, and also import other style files */
+// ─── Reset base ───────────────────────────────────────────
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  background: #f3f4f6;
+  color: #1f2937;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+// ─── Variables light (default) ────────────────────────────
+:root {
+  --bg-primary:      #ffffff;
+  --bg-secondary:    #f9fafb;
+  --bg-page:         #f3f4f6;
+  --text-primary:    #1f2937;
+  --text-secondary:  #6b7280;
+  --border-color:    #e5e7eb;
+  --border-hover:    #d1d5db;
+  --accent:          #534AB7;
+  --accent-light:    #EEEDFE;
+  --accent-dark:     #3C3489;
+  --danger:          #a32d2d;
+  --danger-light:    #fcebeb;
+}
+
+// ─── Variables dark ───────────────────────────────────────
+body.dark-theme {
+  --bg-primary:      #1f2937;
+  --bg-secondary:    #111827;
+  --bg-page:         #0f172a;
+  --text-primary:    #f9fafb;
+  --text-secondary:  #9ca3af;
+  --border-color:    #374151;
+  --border-hover:    #4b5563;
+  --accent:          #7C73D4;
+  --accent-light:    #2d2a4a;
+  --accent-dark:     #534AB7;
+  --danger:          #f87171;
+  --danger-light:    #2d1515;
+
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+// ─── Angular Material overrides ───────────────────────────
+
+// Mat card
+mat-card, .mat-card {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border: 0.5px solid var(--border-color) !important;
+  box-shadow: none !important;
+}
+
+// Mat form field
+.mat-form-field-outline-thick,
+.mat-form-field-outline { color: var(--border-color) !important; }
+
+.mat-input-element {
+  color: var(--text-primary) !important;
+  caret-color: var(--accent) !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-outline {
+  color: var(--accent) !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: var(--accent) !important;
+}
+
+// Mat tab
+.mat-tab-header {
+  border-bottom: 0.5px solid var(--border-color) !important;
+  background: var(--bg-primary) !important;
+}
+
+.mat-tab-label {
+  color: var(--text-secondary) !important;
+  opacity: 1 !important;
+}
+
+.mat-tab-label-active {
+  color: var(--accent) !important;
+}
+
+.mat-ink-bar {
+  background: var(--accent) !important;
+}
+
+.mat-tab-body-wrapper {
+  background: var(--bg-primary) !important;
+}
+
+// Mat dialog
+.mat-dialog-container {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+}
+
+// Mat snackbar
+.mat-snack-bar-container {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border: 0.5px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.snack-success .mat-snack-bar-container {
+  border-left: 3px solid #0F6E56 !important;
+}
+
+.snack-error .mat-snack-bar-container {
+  border-left: 3px solid var(--danger) !important;
+}
+
+// Mat button
+.mat-raised-button.mat-primary,
+.mat-raised-button.btn-submit {
+  background: var(--accent) !important;
+  color: var(--accent-light) !important;
+  border-radius: 8px !important;
+}
+
+// Mat icon button
+.mat-icon-button {
+  border-radius: 8px !important;
+}
+
+// Mat datepicker
+.mat-datepicker-content {
+  background: var(--bg-primary) !important;
+  border: 0.5px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+}
+
+.mat-calendar-body-selected {
+  background: var(--accent) !important;
+}
+
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--accent) !important;
+}
+
+.mat-calendar-arrow,
+.mat-calendar-next-button,
+.mat-calendar-previous-button,
+.mat-calendar-period-button {
+  color: var(--text-primary) !important;
+}
+
+.mat-calendar-table-header,
+.mat-calendar-body-label {
+  color: var(--text-secondary) !important;
+}
+
+.mat-calendar-body-cell-content {
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .mat-calendar-body-disabled .mat-calendar-body-cell-content {
+  color: var(--text-secondary) !important;
+  opacity: 0.4;
+}
+
+// ─── Dark mode — componentes propios ──────────────────────
+body.dark-theme {
+
+  // Navbar
+  .navbar {
+    background: var(--bg-primary);
+    border-color: var(--border-color);
+
+    .brand-name  { color: var(--text-primary); }
+    .icon-btn    { color: var(--text-secondary); }
+    .icon-btn:hover { background: var(--bg-secondary) !important; }
+  }
+
+  // Login
+  .login-container { background: var(--bg-page); }
+  .login-card      { background: var(--bg-primary); border-color: var(--border-color); }
+  .login-header    { border-color: var(--border-color); }
+  .login-header h2 { color: var(--text-primary); }
+  .login-header p  { color: var(--text-secondary); }
+
+  // Form cliente
+  .form-container  { background: var(--bg-page); }
+  .form-card       { background: var(--bg-primary); border-color: var(--border-color); }
+  .form-card-header {
+    border-color: var(--border-color);
+    h2 { color: var(--text-primary); }
+    p  { color: var(--text-secondary); }
+  }
+  .form-divider    { background: var(--border-color); }
+  .back-link       { color: var(--text-secondary); }
+
+  // Lista clientes
+  .list-container  { background: var(--bg-page); }
+  .list-header h1 { color: var(--text-primary) !important; }
+
+  .stat-card {
+    background: var(--bg-primary) !important;
+    border-color: var(--border-color) !important;
+
+    .stat-label { color: var(--text-secondary) !important; }
+    .stat-value { color: var(--text-primary) !important; }
+
+    .stat-icon.purple { background: var(--accent-light); color: var(--accent); }
+    .stat-icon.teal   { background: #0a2e22; color: #5DCAA5; }
+    .stat-icon.amber  { background: #2e1f05; color: #EF9F27; }
+  }
+
+  .table-wrapper {
+    border-color: var(--border-color);
+
+    thead   {
+      background: var(--bg-secondary);
+      th { color: var(--text-secondary) !important; }
+    }
+
+    td { color: var(--text-primary) !important; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--bg-secondary); }
+
+    th {
+      border-color: var(--border-color) !important;
+      background: var(--bg-secondary) !important;
+    }
+
+    .badge-edad {
+      background: var(--bg-secondary) !important;
+      color: var(--text-secondary) !important;
+    }
+
+    .avatar {
+      background: var(--accent-light) !important;
+      color: var(--accent) !important;
+    }
+
+    .col-actions button:hover {
+      color: var(--danger) !important;
+      background: var(--danger-light) !important;
+    }
+  }
+
+  // Empty state
+  .empty-state {
+    color: var(--text-secondary);
+    mat-icon { color: var(--border-color); }
+  }
+
+  // Confirm dialog
+  .dialog-header {
+    h2 { color: var(--text-primary); }
+  }
+  mat-dialog-content p { color: var(--text-secondary); }
+}
+
+// ─── Scrollbar ────────────────────────────────────────────
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }

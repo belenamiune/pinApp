@@ -1,0 +1,82 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 0.5px solid #e5e7eb;
+}
+
+.navbar-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ─── Brand ────────────────────────────────────────────────
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    background: #EEEDFE;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #534AB7;
+    }
+  }
+
+  .brand-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1f2937;
+  }
+}
+
+// ─── Acciones ─────────────────────────────────────────────
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-btn {
+  color: #6b7280;
+  border-radius: 8px !important;
+
+  &:hover { background: #f3f4f6 !important; }
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.logout-btn:hover {
+  color: #a32d2d !important;
+  background: #fcebeb !important;
+}
+
+// ─── Dark mode ────────────────────────────────────────────
+body.dark-theme .navbar {
+  background: #1f2937;
+  border-color: #374151;
+
+  .brand-name  { color: #f9fafb; }
+  .icon-btn    { color: #9ca3af; }
+  .icon-btn:hover { background: #374151 !important; }
+}

@@ -19,6 +19,7 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
 
 // Components
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { NavbarComponent } from '@shared/components/navbar/navbar.component';
 
 const MATERIAL_MODULES = [
   MatButtonModule,
@@ -36,6 +37,7 @@ const MATERIAL_MODULES = [
 const SHARED_DECLARATIONS = [
   CustomDatePipe,
   ConfirmDialogComponent,
+  NavbarComponent
 ];
 
 @NgModule({
@@ -52,6 +54,7 @@ const SHARED_DECLARATIONS = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NavbarComponent,
 
     ...MATERIAL_MODULES,
 

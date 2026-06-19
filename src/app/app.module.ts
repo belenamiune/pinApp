@@ -19,6 +19,8 @@ import { authReducer } from '@store/auth/auth.reducer';
 import { customersReducer } from '@store/customers/customers.reducer';
 import { AuthEffects } from '@store/auth/auth.effects';
 import { CustomersEffects } from '@store/customers/customers.effects';
+import { themeReducer } from './store/theme/theme.reducer';
+import { ThemeEffects } from './store/theme/theme.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,9 +36,10 @@ import { CustomersEffects } from '@store/customers/customers.effects';
 
     StoreModule.forRoot({
       auth: authReducer,
-      customers: customersReducer
+      customers: customersReducer,
+      theme: themeReducer  
     }),
-    EffectsModule.forRoot([AuthEffects, CustomersEffects]),
+    EffectsModule.forRoot([AuthEffects, CustomersEffects, ThemeEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25 })
   ],
   providers: [],

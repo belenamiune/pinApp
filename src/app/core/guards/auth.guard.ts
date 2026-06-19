@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { selectIsLoggedIn } from '@store/auth/auth.selectors';
+import { filter, map, take} from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +10,20 @@ import { selectIsLoggedIn } from '@store/auth/auth.selectors';
 export class AuthGuard implements CanActivate {
 
   constructor(
-    private store: Store,
+    private afAuth: AngularFireAuth,
     private router: Router
   ) {}
 
   canActivate(): Observable<boolean> {
-    return this.store.select(selectIsLoggedIn).pipe(
-      tap(isLoggedIn => {
-        if (!isLoggedIn) this.router.navigate(['/auth']);
+    return this.afAuth.authState.pipe(
+      filter(user => user !== undefined),
+      take(1),
+      map(user => {
+        if (user) {
+          return true;
+        }
+        this.router.navigate(['/auth']);
+        return false;
       })
     );
   }

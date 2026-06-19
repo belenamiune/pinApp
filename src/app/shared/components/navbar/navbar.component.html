@@ -1,0 +1,33 @@
+<nav class="navbar" *ngIf="isLoggedIn$ | async">
+  <div class="navbar-inner">
+
+    <!-- Logo / marca -->
+    <div class="navbar-brand">
+      <div class="brand-icon">
+        <mat-icon>store</mat-icon>
+      </div>
+      <span class="brand-name">Gestión de clientes</span>
+    </div>
+
+    <!-- Acciones -->
+    <div class="navbar-actions">
+
+      <!-- Toggle dark/light -->
+      <button mat-icon-button
+              class="icon-btn"
+              (click)="onToggleTheme()"
+              [title]="(isDark$ | async) ? 'Modo claro' : 'Modo oscuro'">
+        <mat-icon>{{ (isDark$ | async) ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <!-- Logout -->
+      <button mat-icon-button
+              class="icon-btn logout-btn"
+              (click)="onLogout()"
+              title="Cerrar sesión">
+        <mat-icon>logout</mat-icon>
+      </button>
+
+    </div>
+  </div>
+</nav>
