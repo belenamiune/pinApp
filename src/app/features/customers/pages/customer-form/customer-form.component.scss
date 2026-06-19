@@ -1,17 +1,132 @@
 .form-container {
-  max-width: 600px;
+  max-width: 580px;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
-.full-width {
-  width: 100%;
-  margin-bottom: 1rem;
+// ─── Card ─────────────────────────────────────────────────
+.form-card {
+  background: white;
+  border: 0.5px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
+// ─── Header ───────────────────────────────────────────────
+.form-card-header {
+  padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 0.5px solid #e5e7eb;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #1f2937;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6b7280;
+  padding: 0;
+  margin-bottom: 12px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover { color: #374151; }
+}
+
+// ─── Body ─────────────────────────────────────────────────
+.form-body {
+  padding: 1.5rem 1.75rem 1.75rem;
+}
+
+// ─── Dos columnas ─────────────────────────────────────────
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 4px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+// ─── Iconos prefix ────────────────────────────────────────
+mat-icon[matPrefix] {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #9ca3af;
+  margin-right: 4px;
+}
+
+// ─── Divider ──────────────────────────────────────────────
+.form-divider {
+  height: 0.5px;
+  background: #e5e7eb;
+  margin: 1.25rem 0;
+}
+
+// ─── Acciones ─────────────────────────────────────────────
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 10px;
+
+  button[mat-stroked-button] {
+    border-color: #e5e7eb;
+    color: #6b7280;
+    border-radius: 8px;
+    font-weight: 500;
+
+    &:hover { background: #f9fafb; }
+  }
+
+  .btn-submit {
+    background: #534AB7;
+    color: #EEEDFE;
+    border-radius: 8px;
+    font-weight: 500;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
+    }
+
+    &:hover { background: #3C3489; }
+    &[disabled] { opacity: 0.6; cursor: not-allowed; }
+  }
+}
+
+// ─── Responsive ───────────────────────────────────────────
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-card-header,
+  .form-body {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
 }

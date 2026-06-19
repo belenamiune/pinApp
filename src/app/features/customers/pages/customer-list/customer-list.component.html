@@ -16,18 +16,27 @@
       <ng-container *ngIf="stats$ | async as stats">
         <mat-card class="stat-card">
           <mat-card-content>
+            <div class="stat-icon purple">
+              <mat-icon>people</mat-icon>
+            </div>
             <span class="stat-label">Total clientes</span>
             <span class="stat-value">{{ customers.length }}</span>
           </mat-card-content>
         </mat-card>
         <mat-card class="stat-card">
           <mat-card-content>
+            <div class="stat-icon teal">
+              <mat-icon>bar_chart</mat-icon>
+            </div>
             <span class="stat-label">Promedio de edad</span>
             <span class="stat-value">{{ stats.averageAge | number:'1.0-0' }}</span>
           </mat-card-content>
         </mat-card>
         <mat-card class="stat-card">
           <mat-card-content>
+            <div class="stat-icon amber">
+              <mat-icon>functions</mat-icon>
+            </div>
             <span class="stat-label">Desviación estándar</span>
             <span class="stat-value">{{ stats.stdDeviation | number:'1.0-0' }}</span>
           </mat-card-content>
@@ -40,10 +49,7 @@
   <!-- Filtro -->
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Buscar cliente</mat-label>
-    <input matInput
-           [(ngModel)]="searchTerm"
-           (ngModelChange)="applyFilters()"
-           placeholder="Nombre, apellido o edad">
+    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Nombre, apellido o edad">
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 
@@ -95,13 +101,19 @@
         </thead>
         <tbody>
           <tr *ngFor="let customer of filteredCustomers">
-            <td>{{ customer.nombre }}</td>
-            <td>{{ customer.apellido }}</td>
-            <td>{{ customer.edad }}</td>
-            <td>{{ customer.fechaNacimiento | customDate }}</td>
             <td>
-              <button mat-icon-button color="warn"
-                      (click)="deleteCustomer(customer)">
+              <div class="cell-nombre">
+                <span class="avatar">
+                  {{ customer.nombre[0] }}{{ customer.apellido[0] }}
+                </span>
+                {{ customer.nombre }}
+              </div>
+            </td>
+            <td>{{ customer.apellido }}</td>
+            <td><span class="badge-edad">{{ customer.edad }}</span></td>
+            <td>{{ customer.fechaNacimiento | customDate }}</td>
+            <td class="col-actions">
+              <button mat-icon-button (click)="deleteCustomer(customer)">
                 <mat-icon>delete</mat-icon>
               </button>
             </td>

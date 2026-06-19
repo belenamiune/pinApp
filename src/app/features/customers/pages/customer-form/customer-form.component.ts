@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
@@ -20,6 +20,12 @@ export class CustomerFormComponent implements OnInit, OnDestroy {
 
   customerForm!: FormGroup;
   isLoading$ = this.store.select(selectCustomersSaving);
+
+  readonly maxDate = new Date(
+    new Date().getFullYear() - 18,
+    new Date().getMonth(),
+    new Date().getDate()
+  );
 
   private destroy$ = new Subject<void>();
 
@@ -50,12 +56,30 @@ export class CustomerFormComponent implements OnInit, OnDestroy {
       ]],
       edad: ['', [
         Validators.required,
-        Validators.min(1),
+        Validators.min(18),
         Validators.max(120),
         Validators.pattern(/^\d+$/)
       ]],
-      fechaNacimiento: ['', Validators.required]
+      fechaNacimiento: ['', [
+        Validators.required,
+        this.mayorDeEdadValidator
+      ]]
     });
+  }
+
+  /**
+   * Valida que la fecha corresponda a una persona mayor de 18 años.
+   */
+  private mayorDeEdadValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    const fechaNac = new Date(control.value);
+    const hoy      = new Date();
+    const limite   = new Date(
+      hoy.getFullYear() - 18,
+      hoy.getMonth(),
+      hoy.getDate()
+    );
+    return fechaNac <= limite ? null : { menorDeEdad: true };
   }
 
   private listenForFeedback(): void {

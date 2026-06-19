@@ -1,18 +1,26 @@
 <div class="login-container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>PinApp Challenge</mat-card-title>
-    </mat-card-header>
+  <div class="login-card">
 
-    <mat-card-content>
-      <mat-tab-group>
+    <!-- Header -->
+    <div class="login-header">
+      <div class="logo-circle">
+        <mat-icon>store</mat-icon>
+      </div>
+      <h2>Gestión de clientes</h2>
+      <p>Ingresá para acceder a tu cuenta</p>
+    </div>
 
-        <!-- Tab Login -->
-        <mat-tab label="Iniciar sesión">
-          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+    <!-- Tabs -->
+    <mat-tab-group class="auth-tabs" animationDuration="200ms">
 
+      <!-- Tab Login -->
+      <mat-tab label="Iniciar sesión">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+
+          <div class="field-group">
+            <label>Email</label>
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email</mat-label>
+              <mat-icon matPrefix>mail_outline</mat-icon>
               <input matInput formControlName="email" type="email" placeholder="tu@email.com">
               <mat-error *ngIf="getLoginControl('email')?.hasError('required')">
                 El email es requerido
@@ -21,10 +29,13 @@
                 Ingresá un email válido
               </mat-error>
             </mat-form-field>
+          </div>
 
+          <div class="field-group">
+            <label>Contraseña</label>
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Contraseña</mat-label>
-              <input matInput formControlName="password" type="password">
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input matInput formControlName="password" type="password" placeholder="••••••">
               <mat-error *ngIf="getLoginControl('password')?.hasError('required')">
                 La contraseña es requerida
               </mat-error>
@@ -32,23 +43,27 @@
                 Mínimo 6 caracteres
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <button mat-raised-button color="primary"
-                    type="submit"
-                    class="full-width"
-                    [disabled]="isLoading$ | async">
-              {{ (isLoading$ | async) ? 'Ingresando...' : 'Ingresar' }}
-            </button>
+          <button mat-raised-button
+                  type="submit"
+                  class="btn-submit full-width"
+                  [disabled]="isLoading$ | async">
+            <mat-icon>login</mat-icon>
+            {{ (isLoading$ | async) ? 'Ingresando...' : 'Ingresar' }}
+          </button>
 
-          </form>
-        </mat-tab>
+        </form>
+      </mat-tab>
 
-        <!-- Tab Registro -->
-        <mat-tab label="Registrarse">
-          <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
+      <!-- Tab Registro -->
+      <mat-tab label="Registrarse">
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
 
+          <div class="field-group">
+            <label>Email</label>
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email</mat-label>
+              <mat-icon matPrefix>mail_outline</mat-icon>
               <input matInput formControlName="email" type="email" placeholder="tu@email.com">
               <mat-error *ngIf="getRegisterControl('email')?.hasError('required')">
                 El email es requerido
@@ -57,10 +72,13 @@
                 Ingresá un email válido
               </mat-error>
             </mat-form-field>
+          </div>
 
+          <div class="field-group">
+            <label>Contraseña</label>
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Contraseña</mat-label>
-              <input matInput formControlName="password" type="password">
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input matInput formControlName="password" type="password" placeholder="••••••">
               <mat-error *ngIf="getRegisterControl('password')?.hasError('required')">
                 La contraseña es requerida
               </mat-error>
@@ -68,25 +86,31 @@
                 Mínimo 6 caracteres
               </mat-error>
             </mat-form-field>
+          </div>
 
+          <div class="field-group">
+            <label>Confirmar contraseña</label>
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Confirmar contraseña</mat-label>
-              <input matInput formControlName="confirmPassword" type="password">
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input matInput formControlName="confirmPassword" type="password" placeholder="••••••">
               <mat-error *ngIf="registerForm.hasError('passwordMismatch')">
                 Las contraseñas no coinciden
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <button mat-raised-button color="primary"
-                    type="submit"
-                    class="full-width"
-                    [disabled]="isLoading$ | async">
-              {{ (isLoading$ | async) ? 'Ingresando...' : 'Ingresar' }}
-            </button>
-          </form>
-        </mat-tab>
+          <button mat-raised-button
+                  type="submit"
+                  class="btn-submit full-width"
+                  [disabled]="isLoading$ | async">
+            <mat-icon>person_add</mat-icon>
+            {{ (isLoading$ | async) ? 'Registrando...' : 'Crear cuenta' }}
+          </button>
 
-      </mat-tab-group>
-    </mat-card-content>
-  </mat-card>
+        </form>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </div>
 </div>
