@@ -1,29 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
+import * as AuthActions from '@store/auth/auth.actions';
+import { selectAuthError, selectAuthLoading } from '@store/auth/auth.selectors';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   loginForm!: FormGroup;
   registerForm!: FormGroup;
-  isLoading = false;
+  isLoading$ = this.store.select(selectAuthLoading);
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
+    private store: Store,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.initForms();
+    this.listenForErrors();
   }
 
   private initForms(): void {
@@ -39,9 +44,19 @@ export class LoginComponent implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
-  /**
-   * Validador: verifica que password y confirmPassword coincidan.
-   */
+  private listenForErrors(): void {
+    this.store.select(selectAuthError).pipe(
+      takeUntil(this.destroy$),
+      filter(error => !!error)
+    ).subscribe(error => {
+      this.snackBar.open(
+        this.getErrorMessage(error!),
+        'Cerrar',
+        { duration: 4000 }
+      );
+    });
+  }
+
   private passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
     const password = form.get('password')?.value;
     const confirm = form.get('confirmPassword')?.value;
@@ -56,55 +71,24 @@ export class LoginComponent implements OnInit {
     return this.registerForm.get(name);
   }
 
-  async onLogin(): Promise<void> {
+  onLogin(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
-
-    this.isLoading = true;
     const { email, password } = this.loginForm.value;
-
-    try {
-      await this.authService.login(email, password);
-      this.router.navigate(['/customers']);
-    } catch (error: any) {
-      this.snackBar.open(
-        this.getErrorMessage(error.code),
-        'Cerrar',
-        { duration: 4000 }
-      );
-    } finally {
-      this.isLoading = false;
-    }
+    this.store.dispatch(AuthActions.login({ email, password }));
   }
 
-  async onRegister(): Promise<void> {
+  onRegister(): void {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
-
-    this.isLoading = true;
     const { email, password } = this.registerForm.value;
-
-    try {
-      await this.authService.register(email, password);
-      this.router.navigate(['/customers']);
-    } catch (error: any) {
-      this.snackBar.open(
-        this.getErrorMessage(error.code),
-        'Cerrar',
-        { duration: 4000 }
-      );
-    } finally {
-      this.isLoading = false;
-    }
+    this.store.dispatch(AuthActions.register({ email, password }));
   }
 
-  /**
-   * Traducción de códigos de error a mensajes "amigables"
-   */
   private getErrorMessage(code: string): string {
     const errors: { [key: string]: string } = {
       'auth/user-not-found': 'No existe una cuenta con ese email',
@@ -114,5 +98,10 @@ export class LoginComponent implements OnInit {
       'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres'
     };
     return errors[code] || 'Ocurrió un error, intentá de nuevo';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

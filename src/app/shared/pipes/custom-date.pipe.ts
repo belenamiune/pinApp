@@ -2,8 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 /**
  * Pipe personalizado para formatear fechas en formato DD/MM/YYYY.
- * Uso: {{ fecha | customDate }}
- */
+*/
 @Pipe({
   name: 'customDate'
 })

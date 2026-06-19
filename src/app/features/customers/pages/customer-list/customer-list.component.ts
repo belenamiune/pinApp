@@ -1,9 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CustomerService } from 'src/app/core/services/customer.service';
-import { Customer } from 'src/app/shared/models/customer.model';
+import { Customer } from '@models/customer.model';
+import * as CustomerActions from '@store/customers/customers.actions';
+import {
+  selectAllCustomers,
+  selectCustomersLoading,
+  selectCustomerStats
+} from '@store/customers/customers.selectors';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData
+} from '@shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-customer-list',
@@ -12,52 +23,36 @@ import { Customer } from 'src/app/shared/models/customer.model';
 })
 export class CustomerListComponent implements OnInit, OnDestroy {
 
-  customers: Customer[] = [];
-  filteredCustomers: Customer[] = [];
-  isLoading = true;
+  customers$: Observable<Customer[]> = this.store.select(selectAllCustomers);
+  loading$:Observable<boolean> = this.store.select(selectCustomersLoading);
+  stats$ = this.store.select(selectCustomerStats);
 
-  // Filtros y ordenamiento
   searchTerm = '';
   sortField: keyof Customer = 'apellido';
   sortDirection: 'asc' | 'desc' = 'asc';
+  filteredCustomers: Customer[] = [];
 
-  // Análisis de datos
-  averageAge = 0;
-  stdDeviation = 0;
-
+  private allCustomers: Customer[] = [];
   private destroy$ = new Subject<void>();
 
   constructor(
-    private customerService: CustomerService,
-    private router: Router
+    private store: Store,
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.loadCustomers();
-  }
+    this.store.dispatch(CustomerActions.loadCustomers());
 
-  private loadCustomers(): void {
-    this.customerService.getCustomers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (customers) => {
-          this.customers = customers;
-          this.applyFilters();
-          this.calculateStats();
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Error cargando clientes:', err);
-          this.isLoading = false;
-        }
-      });
+    this.customers$.pipe(takeUntil(this.destroy$)).subscribe(customers => {
+      this.allCustomers = customers;
+      this.applyFilters();
+    });
   }
-
 
   applyFilters(): void {
-    let result = [...this.customers];
+    let result = [...this.allCustomers];
 
-    // Filtro por texto
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       result = result.filter(c =>
@@ -67,59 +62,46 @@ export class CustomerListComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Ordenamiento
     result.sort((a, b) => {
       const valA = a[this.sortField];
       const valB = b[this.sortField];
-
       if (valA == null || valB == null) return 0;
       if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
-      if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+      if (valA > valB) return this.sortDirection === 'asc' ?  1 : -1;
       return 0;
     });
 
     this.filteredCustomers = result;
   }
 
-  /**
-   * Cambia el campo de ordenamiento. Si es el mismo campo, invierte la dirección.
-   */
   sortBy(field: keyof Customer): void {
-    if (this.sortField === field) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortField = field;
-      this.sortDirection = 'asc';
-    }
+    this.sortDirection = this.sortField === field
+      ? (this.sortDirection === 'asc' ? 'desc' : 'asc')
+      : 'asc';
+    this.sortField = field;
     this.applyFilters();
   }
 
-  /**
-   * Calcula el promedio y desviación de las edades.
-   */
-  private calculateStats(): void {
-    if (this.customers.length === 0) {
-      this.averageAge = 0;
-      this.stdDeviation = 0;
-      return;
-    }
+  deleteCustomer(customer: Customer): void {
+    const data: ConfirmDialogData = {
+      title: '¿Eliminar cliente?',
+      message: `Estás por eliminar a ${customer.nombre} ${customer.apellido}. Esta acción no se puede deshacer.`,
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar'
+    };
 
-    const ages = this.customers.map(c => c.edad);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data
+    });
 
-    // Promedio
-    const sum = ages.reduce((acc, age) => acc + age, 0);
-    this.averageAge = sum / ages.length;
-
-    // Desviación
-    const squaredDiffs = ages.map(age => Math.pow(age - this.averageAge, 2));
-    const avgSquaredDiff = squaredDiffs.reduce((acc, val) => acc + val, 0) / ages.length;
-    this.stdDeviation = Math.sqrt(avgSquaredDiff);
-  }
-
-  async deleteCustomer(id: string): Promise<void> {
-    if (confirm('¿Estás seguro de que querés eliminar este cliente?')) {
-      await this.customerService.deleteCustomer(id);
-    }
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.store.dispatch(CustomerActions.deleteCustomer({ id: customer.id! }));
+        }
+      });
   }
 
   goToForm(): void {

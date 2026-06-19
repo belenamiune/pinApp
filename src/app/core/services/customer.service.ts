@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Customer } from 'src/app/shared/models/customer.model';
+import { Customer } from '@shared/models/customer.model';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class CustomerService {
 
   private customersCollection: AngularFirestoreCollection<Customer>;

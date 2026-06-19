@@ -10,26 +10,32 @@
   </div>
 
   <!-- Stats -->
-  <div class="stats-container" *ngIf="customers.length > 0">
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <span class="stat-label">Total clientes</span>
-        <span class="stat-value">{{ customers.length }}</span>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <span class="stat-label">Promedio de edad</span>
-        <span class="stat-value">{{ averageAge | number:'1.1-1' }}</span>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <span class="stat-label">Desviación estándar</span>
-        <span class="stat-value">{{ stdDeviation | number:'1.1-1' }}</span>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <ng-container *ngIf="customers$ | async as customers">
+    <div class="stats-container" *ngIf="customers.length > 0">
+
+      <ng-container *ngIf="stats$ | async as stats">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <span class="stat-label">Total clientes</span>
+            <span class="stat-value">{{ customers.length }}</span>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <span class="stat-label">Promedio de edad</span>
+            <span class="stat-value">{{ stats.averageAge | number:'1.0-0' }}</span>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <span class="stat-label">Desviación estándar</span>
+            <span class="stat-value">{{ stats.stdDeviation | number:'1.0-0' }}</span>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+
+    </div>
+  </ng-container>
 
   <!-- Filtro -->
   <mat-form-field appearance="outline" class="search-field">
@@ -42,64 +48,68 @@
   </mat-form-field>
 
   <!-- Loading -->
-  <div *ngIf="isLoading" class="loading">
+  <div *ngIf="loading$ | async" class="loading">
     Cargando clientes...
   </div>
 
-  <!-- Sin resultados -->
-  <div *ngIf="!isLoading && filteredCustomers.length === 0" class="empty-state">
-    <mat-icon>people_outline</mat-icon>
-    <p>No hay clientes registrados</p>
-    <button mat-stroked-button (click)="goToForm()">Registrar el primero</button>
-  </div>
+  <ng-container *ngIf="!(loading$ | async)">
 
-  <!-- Tabla -->
-  <div class="table-wrapper" *ngIf="!isLoading && filteredCustomers.length > 0">
-    <table>
-      <thead>
-        <tr>
-          <th (click)="sortBy('nombre')" class="sortable">
-            Nombre
-            <mat-icon *ngIf="sortField === 'nombre'">
-              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-            </mat-icon>
-          </th>
-          <th (click)="sortBy('apellido')" class="sortable">
-            Apellido
-            <mat-icon *ngIf="sortField === 'apellido'">
-              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-            </mat-icon>
-          </th>
-          <th (click)="sortBy('edad')" class="sortable">
-            Edad
-            <mat-icon *ngIf="sortField === 'edad'">
-              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-            </mat-icon>
-          </th>
-          <th (click)="sortBy('fechaNacimiento')" class="sortable">
-            Fecha de nacimiento
-            <mat-icon *ngIf="sortField === 'fechaNacimiento'">
-              {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-            </mat-icon>
-          </th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let customer of filteredCustomers">
-          <td>{{ customer.nombre }}</td>
-          <td>{{ customer.apellido }}</td>
-          <td>{{ customer.edad }}</td>
-          <td>{{ customer.fechaNacimiento | customDate }}</td>
-          <td>
-            <button mat-icon-button color="warn"
-                    (click)="deleteCustomer(customer.id!)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <!-- Sin resultados -->
+    <div *ngIf="filteredCustomers.length === 0" class="empty-state">
+      <mat-icon>people_outline</mat-icon>
+      <p>No hay clientes registrados</p>
+      <button mat-stroked-button (click)="goToForm()">Registrar el primero</button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-wrapper" *ngIf="filteredCustomers.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th (click)="sortBy('nombre')" class="sortable">
+              Nombre
+              <mat-icon *ngIf="sortField === 'nombre'">
+                {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+              </mat-icon>
+            </th>
+            <th (click)="sortBy('apellido')" class="sortable">
+              Apellido
+              <mat-icon *ngIf="sortField === 'apellido'">
+                {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+              </mat-icon>
+            </th>
+            <th (click)="sortBy('edad')" class="sortable">
+              Edad
+              <mat-icon *ngIf="sortField === 'edad'">
+                {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+              </mat-icon>
+            </th>
+            <th (click)="sortBy('fechaNacimiento')" class="sortable">
+              Fecha de nacimiento
+              <mat-icon *ngIf="sortField === 'fechaNacimiento'">
+                {{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+              </mat-icon>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of filteredCustomers">
+            <td>{{ customer.nombre }}</td>
+            <td>{{ customer.apellido }}</td>
+            <td>{{ customer.edad }}</td>
+            <td>{{ customer.fechaNacimiento | customDate }}</td>
+            <td>
+              <button mat-icon-button color="warn"
+                      (click)="deleteCustomer(customer)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </ng-container>
 
 </div>

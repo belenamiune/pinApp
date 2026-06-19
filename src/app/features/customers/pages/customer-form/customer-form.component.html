@@ -68,9 +68,11 @@
           <button mat-stroked-button type="button" (click)="onCancel()">
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
-            {{ isLoading ? 'Guardando...' : 'Registrar cliente' }}
-          </button>
+          <button mat-raised-button color="primary"
+                type="submit"
+                [disabled]="isLoading$ | async">
+          {{ (isLoading$ | async) ? 'Guardando...' : 'Registrar cliente' }}
+        </button>
         </div>
 
       </form>
