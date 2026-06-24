@@ -8,10 +8,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CustomDatePipe implements PipeTransform {
 
-  transform(value: Date | string | null): string {
+  transform(value: any): string {
     if (!value) return '';
 
-    const date = new Date(value);
+    const date = value?.toDate ? value.toDate() : new Date(value);
+    
     if (isNaN(date.getTime())) return '';
 
     const day = String(date.getDate()).padStart(2, '0');
